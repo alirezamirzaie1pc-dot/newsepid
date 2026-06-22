@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خشکشویی سپید — مدیریت هوشمند</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%230a3d62'/><circle cx='50' cy='50' r='28' fill='none' stroke='%2300c8d4' stroke-width='6'/><circle cx='50' cy='50' r='8' fill='%2300c8d4'/></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --navy:      #070e1a;
+  --navy2:     #0d1f35;
+  --navy3:     #0f2c4a;
+  --teal:      #00c8d4;
+  --teal2:     #00a8b5;
+  --teal-glow: rgba(0,200,212,0.18);
+  --teal-soft: rgba(0,200,212,0.08);
+  --white:     #f0f8ff;
+  --white2:    rgba(240,248,255,0.75);
+  --white3:    rgba(240,248,255,0.45);
+  --glass:     rgba(13,31,53,0.72);
+  --glass2:    rgba(15,44,74,0.55);
+  --border:    rgba(0,200,212,0.18);
+  --border2:   rgba(240,248,255,0.1);
+  --shadow:    0 20px 60px rgba(0,0,0,0.5);
+  --r:         16px;
+  --r2:        24px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.6;
+}
+
+/* ════════════════ NAV ════════════════ */
+nav {
+  position: fixed; top: 0; right: 0; left: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  height: 68px;
+  background: rgba(7,14,26,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border2);
+}
+
+.nav-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none;
+}
+.nav-logo-icon {
+  width: 38px; height: 38px;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  box-shadow: 0 0 16px var(--teal-glow);
+}
+.nav-logo-text { font-size: 17px; font-weight: 800; color: var(--white); }
+.nav-logo-text span { color: var(--teal); }
+
+.nav-links {
+  display: flex; align-items: center; gap: 6px; list-style: none;
+}
+.nav-links a {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border-radius: 10px;
+  text-decoration: none; font-size: 14px; font-weight: 600;
+  color: var(--white3);
+  transition: all .2s;
+}
+.nav-links a:hover, .nav-links a.active {
+  background: var(--teal-soft);
+  color: var(--teal);
+}
+.nav-links a.active { border: 1px solid var(--border); }
+
+.nav-cta {
+  background: linear-gradient(135deg, var(--teal), var(--teal2)) !important;
+  color: var(--navy) !important; font-weight: 800 !important;
+  box-shadow: 0 4px 20px rgba(0,200,212,0.35) !important;
+  padding: 9px 20px !important;
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,200,212,0.5) !important; }
+
+.hamburger {
+  display: none; flex-direction: column; gap: 5px;
+  cursor: pointer; padding: 8px; background: none; border: none;
+}
+.hamburger span { display: block; width: 22px; height: 2px; background: var(--white); border-radius: 2px; transition: .3s; }
+
+/* ════════════════ HERO ════════════════ */
+.hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 100px 40px 60px;
+  position: relative; overflow: hidden;
+}
+
+/* animated gradient orbs */
+.hero-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px);
+  animation: orbFloat 8s ease-in-out infinite;
+  pointer-events: none;
+}
+.hero-orb-1 { width: 500px; height: 500px; background: radial-gradient(circle, rgba(0,200,212,0.15), transparent 70%); top: -100px; right: -150px; animation-delay: 0s; }
+.hero-orb-2 { width: 400px; height: 400px; background: radial-gradient(circle, rgba(0,60,120,0.4), transparent 70%); bottom: -80px; left: -100px; animation-delay: -3s; }
+.hero-orb-3 { width: 300px; height: 300px; background: radial-gradient(circle, rgba(0,200,212,0.08), transparent 70%); top: 40%; left: 30%; animation-delay: -5s; }
+
+@keyframes orbFloat {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33% { transform: translate(20px,-30px) scale(1.05); }
+  66% { transform: translate(-15px,20px) scale(0.97); }
+}
+
+.hero-inner {
+  max-width: 1200px; margin: 0 auto; width: 100%;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  position: relative; z-index: 1;
+}
+
+.hero-text {}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--teal-soft); border: 1px solid var(--border);
+  border-radius: 999px; padding: 6px 16px;
+  font-size: 12px; font-weight: 700; color: var(--teal);
+  margin-bottom: 24px;
+  animation: fadeInDown .6s ease both;
+}
+.hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse 2s infinite; }
+
+@keyframes fadeInDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:none; } }
+@keyframes fadeInUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+@keyframes pulse { 0%,100%{box-shadow:0 0 0 0 rgba(0,200,212,.7)} 50%{box-shadow:0 0 0 6px transparent} }
+
+.hero-h1 {
+  font-size: clamp(32px, 4.5vw, 58px);
+  font-weight: 900; line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 20px;
+  animation: fadeInDown .7s .1s ease both;
+}
+.hero-h1 .accent {
+  color: var(--teal);
+  text-shadow: 0 0 30px rgba(0,200,212,0.4);
+}
+
+.hero-sub {
+  font-size: 16px; line-height: 1.75;
+  color: var(--white3); max-width: 440px;
+  margin-bottom: 36px;
+  animation: fadeInDown .7s .2s ease both;
+}
+
+.hero-actions {
+  display: flex; gap: 12px; flex-wrap: wrap;
+  animation: fadeInDown .7s .3s ease both;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  color: var(--navy); font-family: inherit; font-size: 15px; font-weight: 800;
+  padding: 14px 28px; border-radius: var(--r); border: none; cursor: pointer;
+  box-shadow: 0 8px 30px rgba(0,200,212,0.35);
+  text-decoration: none;
+  transition: all .2s;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,200,212,0.5); }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; border: 1.5px solid var(--border);
+  color: var(--white2); font-family: inherit; font-size: 15px; font-weight: 600;
+  padding: 14px 28px; border-radius: var(--r); cursor: pointer;
+  text-decoration: none;
+  transition: all .2s;
+}
+.btn-ghost:hover { background: var(--teal-soft); border-color: var(--teal); color: var(--teal); }
+
+.hero-stats {
+  display: flex; gap: 32px; margin-top: 48px;
+  animation: fadeInDown .7s .4s ease both;
+}
+.stat { }
+.stat-num { font-size: 28px; font-weight: 900; color: var(--teal); }
+.stat-label { font-size: 12px; color: var(--white3); margin-top: 2px; }
+
+/* ── 3D SCENE ── */
+.hero-scene {
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  animation: fadeInUp .9s .2s ease both;
+}
+
+.scene-3d {
+  position: relative;
+  width: 360px; height: 420px;
+  transform-style: preserve-3d;
+  perspective: 900px;
+}
+
+/* Washing machine */
+.washer {
+  position: absolute;
+  bottom: 30px; left: 50%; transform: translateX(-50%);
+  width: 200px; height: 220px;
+  animation: floatY 4s ease-in-out infinite;
+}
+
+.washer-body {
+  width: 200px; height: 200px;
+  background: linear-gradient(145deg, #1a3a5c, #0d2540);
+  border-radius: 22px;
+  border: 2px solid rgba(0,200,212,0.3);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 0 40px rgba(0,200,212,0.1);
+  position: relative; overflow: hidden;
+}
+.washer-body::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,200,212,0.06) 0%, transparent 60%);
+}
+
+.washer-door {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  border: 5px solid rgba(0,200,212,0.5);
+  background: radial-gradient(circle at 35% 35%, rgba(0,200,212,0.2), rgba(7,14,26,0.9));
+  box-shadow:
+    inset 0 0 30px rgba(0,0,0,0.5),
+    0 0 20px rgba(0,200,212,0.2);
+  overflow: hidden;
+  animation: doorSpin 6s linear infinite;
+}
+.washer-door::before {
+  content: '';
+  position: absolute; inset: 8px;
+  border-radius: 50%;
+  border: 2px dashed rgba(0,200,212,0.2);
+}
+.washer-door::after {
+  content: '';
+  position: absolute; top: 20%; left: 25%;
+  width: 30%; height: 12%;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  transform: rotate(-30deg);
+}
+
+@keyframes doorSpin { from{transform:translate(-50%,-50%) rotate(0deg)} to{transform:translate(-50%,-50%) rotate(360deg)} }
+@keyframes floatY { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-14px)} }
+
+.washer-top {
+  width: 200px; height: 18px;
+  background: linear-gradient(135deg, #1f4a72, #123055);
+  border-radius: 22px 22px 0 0;
+  border: 2px solid rgba(0,200,212,0.2);
+  border-bottom: none;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.washer-dot { width: 6px; height: 6px; border-radius: 50%; }
+.washer-dot:nth-child(1) { background: var(--teal); box-shadow: 0 0 8px var(--teal); animation: blink 2s .0s infinite; }
+.washer-dot:nth-child(2) { background: rgba(0,200,212,0.4); animation: blink 2s .5s infinite; }
+.washer-dot:nth-child(3) { background: rgba(0,200,212,0.2); animation: blink 2s 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+.washer-panel {
+  position: absolute; bottom: 12px; left: 12px; right: 12px;
+  height: 30px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.washer-knob {
+  width: 20px; height: 20px; border-radius: 50%;
+  background: linear-gradient(135deg, #1a5070, #0d2540);
+  border: 1.5px solid rgba(0,200,212,0.4);
+}
+
+/* Shirts floating */
+.shirt {
+  position: absolute;
+  font-size: 48px;
+  filter: drop-shadow(0 8px 20px rgba(0,0,0,0.5));
+  animation: floatShirt 5s ease-in-out infinite;
+  user-select: none;
+}
+.shirt-1 { top: 10px; right: 20px; animation-delay: 0s; transform: rotate(12deg); font-size: 52px; }
+.shirt-2 { top: 40px; left: 10px; animation-delay: -2s; transform: rotate(-8deg); font-size: 38px; opacity: 0.8; }
+.shirt-3 { top: 160px; right: 10px; animation-delay: -1s; transform: rotate(5deg); font-size: 34px; opacity: 0.65; }
+
+@keyframes floatShirt {
+  0%,100% { transform: translateY(0) rotate(12deg); }
+  50% { transform: translateY(-12px) rotate(12deg); }
+}
+.shirt-2 { animation-name: floatShirt2; }
+@keyframes floatShirt2 {
+  0%,100% { transform: translateY(0) rotate(-8deg); }
+  50% { transform: translateY(-16px) rotate(-8deg); }
+}
+.shirt-3 { animation-name: floatShirt3; }
+@keyframes floatShirt3 {
+  0%,100% { transform: translateY(0) rotate(5deg); }
+  50% { transform: translateY(-10px) rotate(5deg); }
+}
+
+/* bubble particles */
+.bubble {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,200,212,0.4);
+  background: rgba(0,200,212,0.05);
+  animation: bubbleFloat 4s ease-in-out infinite;
+}
+.b1 { width:16px;height:16px; bottom:200px;left:30px; animation-delay:0s; }
+.b2 { width:10px;height:10px; bottom:260px;left:60px; animation-delay:-1s; }
+.b3 { width:22px;height:22px; bottom:220px;right:40px; animation-delay:-2s; }
+.b4 { width:8px;height:8px;  bottom:290px;right:70px; animation-delay:-0.5s; }
+.b5 { width:14px;height:14px; top:280px;left:20px; animation-delay:-1.5s; }
+@keyframes bubbleFloat {
+  0%,100%{transform:translateY(0);opacity:.7}
+  50%{transform:translateY(-20px);opacity:1}
+}
+
+/* reflection */
+.scene-glow {
+  position: absolute; bottom: -20px; left: 50%;
+  transform: translateX(-50%);
+  width: 160px; height: 24px;
+  background: radial-gradient(ellipse, rgba(0,200,212,0.3), transparent 70%);
+  filter: blur(8px);
+  animation: glowPulse 4s ease-in-out infinite;
+}
+@keyframes glowPulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+/* ════════════════ FEATURES ════════════════ */
+.section {
+  padding: 80px 40px;
+  position: relative; z-index: 1;
+}
+.section-inner { max-width: 1200px; margin: 0 auto; }
+
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: var(--teal); font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 2px;
+  margin-bottom: 16px;
+}
+.section-label::before { content:''; width:24px; height:2px; background:var(--teal); }
+
+.section-title {
+  font-size: clamp(24px,3vw,40px); font-weight: 900;
+  margin-bottom: 48px; max-width: 500px;
+  line-height: 1.2;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.feature-card {
+  background: var(--glass);
+  border: 1px solid var(--border2);
+  border-radius: var(--r2);
+  padding: 28px;
+  backdrop-filter: blur(12px);
+  transition: all .3s;
+  cursor: default;
+  position: relative; overflow: hidden;
+}
+.feature-card::before {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 120px; height: 120px;
+  background: radial-gradient(circle at top right, rgba(0,200,212,0.07), transparent 70%);
+  pointer-events: none;
+}
+.feature-card:hover {
+  border-color: var(--border);
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,200,212,0.15);
+}
+
+.feature-icon {
+  width: 50px; height: 50px; border-radius: 14px;
+  background: linear-gradient(135deg, var(--teal-soft), var(--teal-glow));
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; margin-bottom: 18px;
+}
+.feature-title { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
+.feature-desc { font-size: 14px; line-height: 1.7; color: var(--white3); }
+.feature-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  color: var(--teal); font-size: 13px; font-weight: 700;
+  text-decoration: none; margin-top: 18px;
+  transition: gap .2s;
+}
+.feature-link:hover { gap: 10px; }
+
+/* ════════════════ FOOTER ════════════════ */
+footer {
+  text-align: center; padding: 30px 40px;
+  border-top: 1px solid var(--border2);
+  color: var(--white3); font-size: 13px;
+  position: relative; z-index: 1;
+}
+footer .brand { color: var(--teal); font-weight: 700; }
+footer .made { color: rgba(240,248,255,0.25); font-size: 11.5px; margin-top: 6px; }
+footer .made a { color: rgba(0,200,212,0.6); text-decoration: none; }
+footer .made a:hover { color: var(--teal); }
+
+/* ════════════════ MOBILE ════════════════ */
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex; flex-direction: column;
+    position: fixed; top: 68px; right: 0; left: 0; bottom: 0;
+    background: rgba(7,14,26,0.97); backdrop-filter: blur(20px);
+    padding: 24px; gap: 8px; z-index: 99;
+  }
+  .nav-links.open a { font-size: 18px; padding: 14px 20px; }
+  .hamburger { display: flex; }
+  .hero { padding: 90px 20px 50px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+  .hero-scene { order: -1; }
+  .scene-3d { width: 260px; height: 300px; transform: scale(0.8); }
+  .hero-stats { gap: 20px; }
+  .section { padding: 60px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🧺</div>
+    <span class="nav-logo-text">خشکشویی <span>سپید</span></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html" class="active">🏠 خانه</a></li>
+    <li><a href="invoice.html">🧾 فاکتور</a></li>
+    <li><a href="finance.html">📊 مالی</a></li>
+    <li><a href="invoice.html" class="nav-cta">ساخت فاکتور</a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="منو">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-orb hero-orb-3"></div>
+
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-badge">✨ سیستم مدیریت هوشمند خشکشویی</div>
+      <h1 class="hero-h1">
+        مدیریت <span class="accent">حرفه‌ای</span><br>
+        خشکشویی شما
+      </h1>
+      <p class="hero-sub">
+        از صدور فاکتور تا گزارش مالی، همه چیز را در یک جا مدیریت کنید. سریع، ساده و هوشمند.
+      </p>
+      <div class="hero-actions">
+        <a href="invoice.html" class="btn-primary">🧾 ساخت فاکتور</a>
+        <a href="finance.html" class="btn-ghost">📊 گزارش مالی</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">٣</div>
+          <div class="stat-label">ابزار یکجا</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">PDF</div>
+          <div class="stat-label">خروجی فاکتور</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">Excel</div>
+          <div class="stat-label">گزارش مالی</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scene">
+      <div class="scene-3d">
+        <!-- floating shirts -->
+        <div class="shirt shirt-1">👔</div>
+        <div class="shirt shirt-2">👗</div>
+        <div class="shirt shirt-3">👕</div>
+
+        <!-- bubbles -->
+        <div class="bubble b1"></div>
+        <div class="bubble b2"></div>
+        <div class="bubble b3"></div>
+        <div class="bubble b4"></div>
+        <div class="bubble b5"></div>
+
+        <!-- washing machine -->
+        <div class="washer">
+          <div class="washer-top">
+            <div class="washer-dot"></div>
+            <div class="washer-dot"></div>
+            <div class="washer-dot"></div>
+          </div>
+          <div class="washer-body">
+            <div class="washer-door"></div>
+            <div class="washer-panel">
+              <div class="washer-knob"></div>
+              <div class="washer-knob"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scene-glow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="section-inner">
+    <div class="section-label">امکانات</div>
+    <h2 class="section-title">همه چیز که نیاز دارید</h2>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🧾</div>
+        <h3 class="feature-title">صدور فاکتور حرفه‌ای</h3>
+        <p class="feature-desc">فاکتور رسمی با لوگو، اطلاعات مشتری، اقلام شست‌وشو و وضعیت پرداخت. دانلود PDF با یک کلیک.</p>
+        <a href="invoice.html" class="feature-link">رفتن به فاکتور ←</a>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3 class="feature-title">مدیریت مالی روزانه</h3>
+        <p class="feature-desc">ثبت درآمد روزانه، مشخص کردن نقد یا کارتخوان، فیلتر بازه زمانی و خروجی Excel.</p>
+        <a href="finance.html" class="feature-link">رفتن به مالی ←</a>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">🔍</div>
+        <h3 class="feature-title">تاریخچه و جستجو</h3>
+        <p class="feature-desc">تمام فاکتورهای صادرشده در یک نگاه. جستجو و بازیابی سریع، مدیریت و پاکسازی تاریخچه.</p>
+        <a href="invoice.html" class="feature-link">مشاهده تاریخچه ←</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div><span class="brand">خشکشویی سپید</span> — سیستم مدیریت هوشمند</div>
+  <div class="made">ساخت شده توسط <a href="#" target="_blank">nightcode</a></div>
+</footer>
+
+<script>
+  // hamburger
+  const hamburger = document.getElementById('hamburger');
+  const navLinks  = document.getElementById('navLinks');
+  hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+    const spans = hamburger.querySelectorAll('span');
+    if (navLinks.classList.contains('open')) {
+      spans[0].style.transform = 'rotate(45deg) translate(5px,5px)';
+      spans[1].style.opacity = '0';
+      spans[2].style.transform = 'rotate(-45deg) translate(5px,-5px)';
+    } else {
+      spans.forEach(s => { s.style.transform = ''; s.style.opacity = ''; });
+    }
+  });
+  // close on link click (mobile)
+  navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    navLinks.classList.remove('open');
+    hamburger.querySelectorAll('span').forEach(s => { s.style.transform=''; s.style.opacity=''; });
+  }));
+  // nav shadow on scroll
+  window.addEventListener('scroll', () => {
+    document.getElementById('navbar').style.boxShadow =
+      window.scrollY > 20 ? '0 4px 30px rgba(0,0,0,0.4)' : 'none';
+  });
+</script>
+</body>
+</html>
