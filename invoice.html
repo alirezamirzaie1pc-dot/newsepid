@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>فاکتور — خشکشویی سپید</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%230a3d62'/><circle cx='50' cy='50' r='28' fill='none' stroke='%2300c8d4' stroke-width='6'/><circle cx='50' cy='50' r='8' fill='%2300c8d4'/></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --navy:      #070e1a;
+  --navy2:     #0d1f35;
+  --navy3:     #0f2c4a;
+  --teal:      #00c8d4;
+  --teal2:     #00a8b5;
+  --teal-glow: rgba(0,200,212,0.18);
+  --teal-soft: rgba(0,200,212,0.08);
+  --white:     #f0f8ff;
+  --white2:    rgba(240,248,255,0.75);
+  --white3:    rgba(240,248,255,0.45);
+  --glass:     rgba(13,31,53,0.8);
+  --glass2:    rgba(15,44,74,0.55);
+  --border:    rgba(0,200,212,0.2);
+  --border2:   rgba(240,248,255,0.08);
+  --r:         14px;
+  --r2:        20px;
+  --danger:    #e05555;
+  --ok:        #00c896;
+  --gold:      #f0b429;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Vazirmatn',Tahoma,sans-serif;
+  background:var(--navy); color:var(--white);
+  min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.5;
+}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:64px;
+  background:rgba(7,14,26,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border2);
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-icon{
+  width:34px;height:34px;background:linear-gradient(135deg,var(--teal),var(--teal2));
+  border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;
+  box-shadow:0 0 14px var(--teal-glow);
+}
+.nav-logo-text{font-size:16px;font-weight:800;color:var(--white);}
+.nav-logo-text span{color:var(--teal);}
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links a{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:9px;
+  text-decoration:none;font-size:13.5px;font-weight:600;
+  color:var(--white3);transition:all .2s;
+}
+.nav-links a:hover{background:var(--teal-soft);color:var(--teal);}
+.nav-links a.active{background:var(--teal-soft);color:var(--teal);border:1px solid var(--border);}
+.nav-cta{background:linear-gradient(135deg,var(--teal),var(--teal2))!important;color:var(--navy)!important;font-weight:800!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:none;border:none;}
+.hamburger span{display:block;width:22px;height:2px;background:var(--white);border-radius:2px;transition:.3s;}
+
+/* ── LAYOUT ── */
+.app{
+  max-width:900px;margin:0 auto;
+  padding:28px 20px 80px;
+  position:relative;z-index:1;
+}
+
+/* ── PAGE TITLE ── */
+.page-title{
+  display:flex;align-items:center;gap:14px;
+  margin-bottom:28px;padding-bottom:20px;
+  border-bottom:1px solid var(--border2);
+}
+.page-title-icon{
+  width:46px;height:46px;border-radius:13px;
+  background:linear-gradient(135deg,var(--teal-soft),var(--teal-glow));
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+}
+.page-title h1{font-size:22px;font-weight:900;}
+.page-title p{font-size:13px;color:var(--white3);margin-top:2px;}
+
+/* ── CARD ── */
+.card{
+  background:var(--glass);border:1px solid var(--border2);
+  border-radius:var(--r2);backdrop-filter:blur(16px);
+  margin-bottom:20px;overflow:hidden;
+}
+.card-header{
+  padding:18px 24px;border-bottom:1px solid var(--border2);
+  display:flex;align-items:center;gap:10px;
+}
+.card-header-icon{
+  width:32px;height:32px;border-radius:9px;
+  background:var(--teal-soft);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.card-header-text h2{font-size:14px;font-weight:800;}
+.card-header-text p{font-size:11.5px;color:var(--white3);margin-top:1px;}
+.card-body{padding:24px;}
+
+/* ── FORM ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px 16px;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{font-size:12px;font-weight:600;color:var(--white3);}
+.field input,.field select{
+  border:1.5px solid var(--border2);
+  background:rgba(13,31,53,0.6);
+  border-radius:10px;padding:10px 13px;
+  font-family:inherit;font-size:13.5px;color:var(--white);
+  transition:border-color .15s,box-shadow .15s;
+  -webkit-appearance:none;
+}
+.field input::placeholder{color:rgba(240,248,255,0.2);}
+.field input:focus,.field select:focus{
+  outline:none;border-color:var(--teal);
+  box-shadow:0 0 0 3px rgba(0,200,212,0.15);
+}
+.field select option{background:#0d1f35;color:var(--white);}
+
+/* ── ITEMS TABLE ── */
+.items-box{
+  border:1.5px solid var(--border2);border-radius:var(--r);
+  overflow:hidden;margin-bottom:20px;
+}
+.items-scroll{overflow-x:auto;}
+table.items{width:100%;min-width:640px;border-collapse:collapse;font-size:13px;}
+table.items thead th{
+  background:rgba(0,200,212,0.08);
+  color:var(--teal);font-weight:700;font-size:11.5px;
+  padding:11px 8px;text-align:center;
+  border-bottom:1.5px solid var(--border2);
+}
+table.items tbody td{
+  padding:8px 6px;border-bottom:1px solid var(--border2);
+  text-align:center;vertical-align:middle;
+}
+table.items tbody tr:last-child td{border-bottom:none;}
+table.items input,table.items select{
+  width:100%;border:1.5px solid var(--border2);border-radius:8px;
+  padding:7px 8px;font-family:inherit;font-size:13px;
+  background:rgba(13,31,53,0.7);text-align:center;color:var(--white);
+  -webkit-appearance:none;
+}
+table.items input:focus,table.items select:focus{
+  outline:none;border-color:var(--teal);
+  box-shadow:0 0 0 3px rgba(0,200,212,0.12);
+}
+table.items input.item-name{text-align:right;}
+table.items select option{background:#0d1f35;}
+.row-amount{font-weight:700;color:var(--teal);white-space:nowrap;font-variant-numeric:tabular-nums;}
+.remove-row{
+  background:none;border:none;cursor:pointer;
+  color:rgba(240,248,255,0.25);font-size:14px;
+  width:28px;height:28px;border-radius:7px;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.remove-row:hover{background:rgba(224,85,85,0.15);color:var(--danger);}
+.items-toolbar{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 14px;background:rgba(0,0,0,0.2);
+  border-top:1px solid var(--border2);flex-wrap:wrap;gap:8px;
+}
+.add-row-btn{
+  border:1.5px dashed var(--border);background:transparent;
+  color:var(--teal);font-family:inherit;font-size:12.5px;font-weight:700;
+  padding:7px 14px;border-radius:9px;cursor:pointer;transition:all .15s;
+}
+.add-row-btn:hover{background:var(--teal-soft);}
+.quick-total{font-size:12.5px;color:var(--white3);font-weight:600;}
+.quick-total b{color:var(--teal);font-size:15px;font-variant-numeric:tabular-nums;}
+
+/* ── ACTION BUTTONS ── */
+.actions{display:flex;gap:10px;justify-content:flex-end;padding:0 24px 24px;}
+.btn{
+  font-family:inherit;font-size:14px;font-weight:700;
+  padding:12px 22px;border-radius:11px;cursor:pointer;border:none;
+  transition:all .15s;
+}
+.btn:active{transform:translateY(1px);}
+.btn-primary{
+  background:linear-gradient(135deg,var(--teal),var(--teal2));color:var(--navy);
+  box-shadow:0 6px 24px rgba(0,200,212,0.3);
+}
+.btn-primary:hover{box-shadow:0 8px 30px rgba(0,200,212,0.5);}
+.btn-ghost{
+  background:rgba(13,31,53,0.6);border:1.5px solid var(--border2);color:var(--white3);
+}
+.btn-ghost:hover{background:var(--teal-soft);border-color:var(--border);color:var(--teal);}
+.btn-danger{
+  background:rgba(224,85,85,0.12);border:1.5px solid rgba(224,85,85,0.25);color:var(--danger);
+  font-size:12.5px;padding:9px 16px;
+}
+.btn-danger:hover{background:rgba(224,85,85,0.2);}
+
+/* ════════ INVOICE OUTPUT ════════ */
+/* 
+  IMPORTANT: The invoice output uses a WHITE background
+  so it prints/exports correctly to PDF.
+  We wrap it in a white container.
+*/
+.invoice-wrap{margin-top:24px;}
+.invoice{
+  background:#fff;color:#14213d;
+  border-radius:var(--r2);overflow:hidden;
+  display:none;
+  font-family:'Vazirmatn',Tahoma,sans-serif;
+}
+.invoice.show{display:block;}
+
+/* invoice content - all white/light styles */
+.inv-head{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  gap:16px;flex-wrap:wrap;padding:28px 30px 22px;
+  border-bottom:2px solid #eef2f8;
+  background:linear-gradient(135deg,#f8faff 0%,#fff 100%);
+}
+.inv-brand{display:flex;align-items:center;gap:12px;}
+.inv-brand-icon{
+  width:54px;height:54px;border-radius:14px;
+  background:linear-gradient(135deg,#0a3d62,#0d5c8f);
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+  box-shadow:0 6px 20px rgba(10,61,98,0.25);
+}
+.inv-brand h2{font-size:20px;font-weight:900;color:#0a3d62;}
+.inv-brand span{font-size:11.5px;color:#6b7a99;display:block;margin-top:3px;}
+
+.inv-meta{text-align:left;font-size:12.5px;line-height:2;color:#6b7a99;}
+.inv-meta b{font-weight:700;color:#14213d;}
+.pay-tag{
+  display:inline-block;padding:4px 12px;border-radius:999px;
+  font-weight:700;font-size:11px;margin-bottom:6px;
+  background:#eaf7fd;color:#0a3d62;border:1px solid #bde0f5;
+}
+.pay-tag.paid{background:rgba(0,200,150,0.1);color:#00a87a;border-color:rgba(0,200,150,0.3);}
+.pay-tag.deposit{background:rgba(240,180,41,0.12);color:#b08900;border-color:rgba(240,180,41,0.3);}
+
+.inv-body{padding:24px 30px 8px;}
+
+.customer-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px;
+}
+.customer-strip .cell{
+  background:#f8faff;border:1px solid #eef2f8;border-radius:11px;padding:12px 14px;
+}
+.customer-strip .cell .lbl{font-size:10.5px;color:#8896b0;font-weight:600;margin-bottom:3px;}
+.customer-strip .cell .val{font-size:13.5px;font-weight:700;color:#14213d;}
+
+table.print-items{width:100%;border-collapse:collapse;margin-bottom:20px;font-size:13px;}
+table.print-items thead th{
+  background:#eaf7fd;color:#0a3d62;
+  padding:10px 8px;font-size:11px;font-weight:700;text-align:center;
+}
+table.print-items tbody td{
+  padding:10px 8px;border-bottom:1px solid #f0f4fa;text-align:center;
+}
+table.print-items tbody td.name-cell{text-align:right;font-weight:600;color:#14213d;}
+table.print-items tbody td.service-cell{font-size:12px;color:#0a5f7a;font-weight:600;}
+table.print-items tfoot td{padding:9px 8px;font-weight:700;}
+table.print-items tfoot tr.grand td{
+  border-top:2px solid #14213d;font-size:15px;color:#14213d;padding-top:13px;
+}
+table.print-items tfoot td.lbl-cell{text-align:left;color:#6b7a99;font-weight:600;font-size:12px;}
+table.print-items tfoot tr.grand td.lbl-cell{color:#14213d;}
+
+.note-box{
+  background:#f8faff;border:1px dashed #c8d8ef;border-radius:11px;
+  padding:12px 14px;font-size:12.5px;color:#6b7a99;margin-bottom:22px;
+}
+.sign-row{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:4px 0 24px;
+}
+.sign-box{text-align:center;}
+.sign-box .label{font-size:11.5px;font-weight:700;color:#6b7a99;margin-bottom:8px;}
+.sign-box .pad{height:72px;border:1.5px solid #e2e8f5;border-radius:11px;background:#f8faff;}
+
+.inv-foot{
+  background:#f8faff;border-top:1px solid #eef2f8;
+  padding:14px 30px;display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:8px;font-size:11.5px;color:#8896b0;
+}
+.inv-foot .brand-note{color:#0a3d62;font-weight:700;}
+
+/* pdf toolbar */
+.pdf-toolbar{
+  display:flex;gap:10px;justify-content:center;margin-top:18px;
+}
+
+/* ════════ HISTORY DRAWER ════════ */
+.drawer-overlay{
+  position:fixed;inset:0;background:rgba(7,14,26,0.7);
+  backdrop-filter:blur(4px);opacity:0;pointer-events:none;
+  transition:opacity .25s;z-index:90;
+}
+.drawer-overlay.open{opacity:1;pointer-events:auto;}
+.history-drawer{
+  position:fixed;top:0;right:0;height:100vh;
+  width:340px;max-width:88vw;
+  background:#0d1f35;border-left:1px solid var(--border2);
+  box-shadow:-24px 0 60px rgba(0,0,0,0.5);
+  transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  z-index:95;display:flex;flex-direction:column;
+}
+.history-drawer.open{transform:translateX(0);}
+.drawer-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 20px;border-bottom:1px solid var(--border2);
+}
+.drawer-head h3{margin:0;font-size:15px;font-weight:800;display:flex;align-items:center;gap:8px;}
+.drawer-head-actions{display:flex;align-items:center;gap:8px;}
+.drawer-close{
+  width:32px;height:32px;border-radius:9px;
+  border:1px solid var(--border2);background:transparent;
+  color:var(--white3);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.drawer-close:hover{background:var(--teal-soft);border-color:var(--border);color:var(--teal);}
+.drawer-body{flex:1;overflow-y:auto;padding:14px;}
+.drawer-empty{text-align:center;color:var(--white3);font-size:13px;padding:50px 20px;line-height:2;}
+.drawer-empty .big{font-size:36px;margin-bottom:8px;}
+.hist-card{
+  border:1.5px solid var(--border2);border-radius:13px;
+  padding:13px 14px;margin-bottom:10px;cursor:pointer;
+  background:rgba(13,31,53,0.6);transition:all .15s;
+}
+.hist-card:hover{border-color:var(--border);background:var(--teal-soft);}
+.hist-card .row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.hist-card .inv-no{font-weight:800;font-size:13px;}
+.hist-card .pay-mini{
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:999px;
+  background:var(--teal-soft);color:var(--teal);border:1px solid var(--border);
+}
+.hist-card .pay-mini.paid{background:rgba(0,200,150,0.1);color:#00c896;border-color:rgba(0,200,150,0.25);}
+.hist-card .pay-mini.deposit{background:rgba(240,180,41,0.1);color:var(--gold);border-color:rgba(240,180,41,0.25);}
+.hist-card .cust{font-size:12.5px;font-weight:600;margin-bottom:2px;}
+.hist-card .meta-line{display:flex;justify-content:space-between;font-size:11.5px;color:var(--white3);}
+.hist-card .total{font-weight:700;color:var(--teal);}
+.drawer-foot{padding:14px;border-top:1px solid var(--border2);text-align:center;}
+.drawer-foot .note{font-size:11px;color:rgba(240,248,255,0.2);}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(16px);
+  background:#0d1f35;border:1px solid var(--border);color:var(--teal);
+  padding:12px 22px;border-radius:12px;font-size:13.5px;font-weight:600;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s,transform .25s;
+  box-shadow:0 16px 40px rgba(0,0,0,0.5);z-index:50;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── RESPONSIVE ── */
+@media(max-width:680px){
+  nav{padding:0 16px;}
+  .nav-links{display:none;}
+  .nav-links.open{
+    display:flex;flex-direction:column;
+    position:fixed;top:64px;right:0;left:0;bottom:0;
+    background:rgba(7,14,26,0.97);backdrop-filter:blur(20px);
+    padding:20px;gap:6px;z-index:99;
+  }
+  .nav-links.open a{font-size:17px;padding:13px 18px;}
+  .hamburger{display:flex;}
+  .grid2,.grid3{grid-template-columns:1fr;}
+  .customer-strip{grid-template-columns:1fr;}
+  .sign-row{grid-template-columns:1fr;}
+  .inv-head{flex-direction:column;}
+  .inv-meta{text-align:right;}
+}
+@media print{
+  body{background:#fff;padding:0;}
+  nav,.actions,.pdf-toolbar,.drawer-overlay,.history-drawer,.page-title,.toast{display:none!important;}
+  .card{display:none!important;}
+  .invoice-wrap{margin:0;}
+  .invoice{box-shadow:none;border:none;border-radius:0;display:block!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🧺</div>
+    <span class="nav-logo-text">خشکشویی <span>سپید</span></span>
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="index.html">🏠 خانه</a></li>
+    <li><a href="invoice.html" class="active">🧾 فاکتور</a></li>
+    <li><a href="finance.html">📊 مالی</a></li>
+    <li><a href="#" id="historyBtnNav">🕘 تاریخچه <span id="histBadgeNav" style="background:var(--teal);color:var(--navy);border-radius:999px;padding:1px 7px;font-size:11px;font-weight:800;">0</span></a></li>
+  </ul>
+  <button class="hamburger" id="hamburger" aria-label="منو">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="app">
+
+  <div class="page-title">
+    <div class="page-title-icon">🧾</div>
+    <div>
+      <h1>صدور فاکتور</h1>
+      <p>اطلاعات مشتری و اقلام را وارد کنید</p>
+    </div>
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">👤</div>
+      <div class="card-header-text">
+        <h2>اطلاعات مشتری و فاکتور</h2>
+        <p>مشخصات مشتری و تاریخ را وارد کنید</p>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="grid3" style="margin-bottom:14px;">
+        <div class="field">
+          <label for="custName">نام مشتری</label>
+          <input id="custName" type="text" placeholder="مثلاً: آقای محمدی" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="custPhone">شماره تماس</label>
+          <input id="custPhone" type="tel" placeholder="09xxxxxxxxx">
+        </div>
+        <div class="field">
+          <label for="invNo">شماره فاکتور</label>
+          <input id="invNo" type="text" placeholder="مثلاً: 1024">
+        </div>
+        <div class="field">
+          <label for="invDate">تاریخ تحویل گرفتن</label>
+          <input id="invDate" type="date">
+        </div>
+        <div class="field">
+          <label for="deliveryDate">تاریخ تحویل دادن</label>
+          <input id="deliveryDate" type="date">
+        </div>
+        <div class="field">
+          <label for="payStatus">وضعیت پرداخت</label>
+          <select id="payStatus">
+            <option value="پرداخت شده">پرداخت شده</option>
+            <option value="پرداخت نشده" selected>پرداخت نشده</option>
+            <option value="بیعانه دریافت شد">بیعانه دریافت شد</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ITEMS CARD -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-icon">📦</div>
+      <div class="card-header-text">
+        <h2>اقلام خشکشویی</h2>
+        <p>لیست لباس‌ها و خدمات را وارد کنید</p>
+      </div>
+    </div>
+    <div class="card-body" style="padding-bottom:0;">
+      <div class="items-box">
+        <div class="items-scroll">
+          <table class="items">
+            <thead>
+              <tr>
+                <th style="width:32px;">#</th>
+                <th>نوع جنس</th>
+                <th style="width:140px;">خدمات</th>
+                <th style="width:80px;">تعداد</th>
+                <th style="width:120px;">مبلغ واحد (ریال)</th>
+                <th style="width:120px;">جمع (ریال)</th>
+                <th style="width:34px;"></th>
+              </tr>
+            </thead>
+            <tbody id="itemsBody"></tbody>
+          </table>
+        </div>
+        <div class="items-toolbar">
+          <button class="add-row-btn" id="addRowBtn" type="button">+ افزودن ردیف</button>
+          <div class="quick-total">جمع کل: <b id="liveTotal">0</b> ریال</div>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:20px;">
+        <label for="noteInput">توضیحات (اختیاری)</label>
+        <input id="noteInput" type="text" placeholder="مثلاً: لکه روی یقه، اتو ویژه ...">
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-ghost" id="resetBtn">پاک کردن</button>
+      <button class="btn btn-primary" id="generateBtn">ساخت فاکتور ↑</button>
+    </div>
+  </div>
+
+  <!-- INVOICE OUTPUT -->
+  <div class="invoice-wrap">
+    <div class="invoice" id="invoiceBox">
+      <div id="invoicePrintArea">
+        <div class="inv-head">
+          <div class="inv-brand">
+            <div class="inv-brand-icon">🧺</div>
+            <div>
+              <h2>خشکشویی سپید</h2>
+              <span>فاکتور رسمی خدمات شست‌وشو و خشکشویی</span>
+            </div>
+          </div>
+          <div class="inv-meta">
+            <span class="pay-tag" id="payTag">پرداخت نشده</span><br>
+            شماره فاکتور: <b id="outInvNo">—</b><br>
+            تاریخ صدور: <b id="outInvDate">—</b>
+          </div>
+        </div>
+
+        <div class="inv-body">
+          <div class="customer-strip">
+            <div class="cell"><div class="lbl">نام مشتری</div><div class="val" id="outCustName">—</div></div>
+            <div class="cell"><div class="lbl">شماره تماس</div><div class="val" id="outCustPhone">—</div></div>
+            <div class="cell"><div class="lbl">تاریخ تحویل دادن</div><div class="val" id="outDeliveryDate">—</div></div>
+          </div>
+
+          <table class="print-items">
+            <thead>
+              <tr>
+                <th style="width:32px;">#</th>
+                <th>نوع جنس</th>
+                <th style="width:110px;">خدمات</th>
+                <th style="width:70px;">تعداد</th>
+                <th style="width:130px;">مبلغ واحد (ریال)</th>
+                <th style="width:130px;">جمع (ریال)</th>
+              </tr>
+            </thead>
+            <tbody id="outItemsBody"></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5" class="lbl-cell">جمع جزء</td>
+                <td id="outSubtotal">0 ریال</td>
+              </tr>
+              <tr class="grand">
+                <td colspan="5" class="lbl-cell">مبلغ قابل پرداخت</td>
+                <td id="outGrandTotal">0 ریال</td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <div class="note-box" id="outNoteBox" style="display:none;">
+            <b>توضیحات: </b><span id="outNoteText"></span>
+          </div>
+
+          <div class="sign-row">
+            <div class="sign-box">
+              <div class="label">مهر خشکشویی سپید</div>
+              <div class="pad"></div>
+            </div>
+            <div class="sign-box">
+              <div class="label">امضای تحویل‌گیرنده</div>
+              <div class="pad"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="inv-foot">
+          <span>این فاکتور را تا زمان تحویل لباس نزد خود نگه دارید.</span>
+          <span class="brand-note">خشکشویی سپید</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-toolbar" id="pdfToolbar" style="display:none;">
+      <button class="btn btn-primary" id="downloadPdfBtn">⬇ دانلود PDF</button>
+      <button class="btn btn-ghost" id="printBtn">🖨 چاپ</button>
+    </div>
+  </div>
+</div><!-- /app -->
+
+<!-- FOOTER -->
+<footer style="text-align:center;padding:24px 20px;border-top:1px solid var(--border2);color:var(--white3);font-size:12px;position:relative;z-index:1;">
+  <div><span style="color:var(--teal);font-weight:700;">خشکشویی سپید</span> — مدیریت هوشمند خشکشویی</div>
+  <div style="color:rgba(240,248,255,0.2);font-size:11px;margin-top:4px;">ساخت شده توسط <a href="#" style="color:rgba(0,200,212,0.5);text-decoration:none;">nightcode</a></div>
+</footer>
+
+<!-- HISTORY DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="history-drawer" id="historyDrawer">
+  <div class="drawer-head">
+    <h3>🕘 تاریخچه فاکتورها</h3>
+    <div class="drawer-head-actions">
+      <button class="btn btn-danger" id="clearHistoryBtn" style="font-size:11.5px;padding:6px 12px;">🗑 پاک کردن همه</button>
+      <button class="drawer-close" id="drawerCloseBtn">✕</button>
+    </div>
+  </div>
+  <div class="drawer-body" id="historyList">
+    <div class="drawer-empty" id="historyEmpty">
+      <div class="big">🧺</div>
+      هنوز فاکتوری ساخته نشده.
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <div class="note">تاریخچه در مرورگر ذخیره می‌شود</div>
+  </div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ── NAV ── */
+const hamburger = document.getElementById('hamburger');
+const navLinks  = document.getElementById('navLinks');
+hamburger.addEventListener('click', () => {
+  navLinks.classList.toggle('open');
+  const s = hamburger.querySelectorAll('span');
+  if(navLinks.classList.contains('open')){
+    s[0].style.transform='rotate(45deg) translate(5px,5px)';s[1].style.opacity='0';s[2].style.transform='rotate(-45deg) translate(5px,-5px)';
+  } else { s.forEach(x=>{x.style.transform='';x.style.opacity='';}); }
+});
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{navLinks.classList.remove('open');hamburger.querySelectorAll('span').forEach(s=>{s.style.transform='';s.style.opacity='';})}));
+
+/* ── HELPERS ── */
+function fa(n){ return Number(n||0).toLocaleString('fa-IR'); }
+function todayISO(){
+  const d=new Date(), off=d.getTimezoneOffset();
+  return new Date(d.getTime()-off*60000).toISOString().slice(0,10);
+}
+function faDate(iso){
+  if(!iso) return '—';
+  try{ return new Date(iso+'T00:00:00').toLocaleDateString('fa-IR',{year:'numeric',month:'long',day:'numeric'}); }
+  catch(e){ return iso; }
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+function payClass(s){
+  if(s==='پرداخت شده') return 'paid';
+  if(s==='بیعانه دریافت شد') return 'deposit';
+  return '';
+}
+
+/* ── ITEMS ── */
+const itemsBody=document.getElementById('itemsBody');
+let rowCount=0;
+const SERVICES=['اتو','شست‌وشو','اتو و شست‌وشو'];
+
+function servOpts(){ return SERVICES.map(s=>`<option value="${s}">${s}</option>`).join(''); }
+
+function addRow(){
+  rowCount++;
+  const tr=document.createElement('tr');
+  tr.dataset.rowId=rowCount;
+  tr.innerHTML=`
+    <td></td>
+    <td><input type="text" class="item-name" placeholder="پیراهن، شلوار ..." data-role="name"></td>
+    <td><select class="item-service" data-role="service">${servOpts()}</select></td>
+    <td><input type="number" min="0" value="1" data-role="qty"></td>
+    <td><input type="number" min="0" step="1000" placeholder="50000" data-role="price"></td>
+    <td class="row-amount" data-role="amount">—</td>
+    <td><button type="button" class="remove-row" data-role="remove">✕</button></td>
+  `;
+  itemsBody.appendChild(tr);
+  reindex();
+}
+function reindex(){
+  Array.from(itemsBody.children).forEach((tr,i)=>tr.children[0].textContent=i+1);
+}
+function removeRow(tr){
+  if(itemsBody.children.length<=1){
+    tr.querySelector('[data-role="name"]').value='';
+    tr.querySelector('[data-role="qty"]').value=1;
+    tr.querySelector('[data-role="price"]').value='';
+    calcRow(tr); return;
+  }
+  tr.remove(); reindex(); updateTotal();
+}
+function calcRow(tr){
+  const qty=parseFloat(tr.querySelector('[data-role="qty"]').value)||0;
+  const price=parseFloat(tr.querySelector('[data-role="price"]').value)||0;
+  const amt=qty*price;
+  tr.querySelector('[data-role="amount"]').textContent=amt?fa(amt)+' ریال':'—';
+  tr.dataset.amount=amt; updateTotal();
+}
+function updateTotal(){
+  let t=0;
+  Array.from(itemsBody.children).forEach(tr=>t+=parseFloat(tr.dataset.amount)||0);
+  document.getElementById('liveTotal').textContent=fa(t);
+}
+itemsBody.addEventListener('input',e=>{
+  const tr=e.target.closest('tr');
+  if(!tr) return;
+  const r=e.target.dataset.role;
+  if(r==='qty'||r==='price') calcRow(tr);
+});
+itemsBody.addEventListener('click',e=>{
+  if(e.target.dataset.role==='remove') removeRow(e.target.closest('tr'));
+});
+document.getElementById('addRowBtn').addEventListener('click',addRow);
+
+// seed
+addRow(); addRow();
+const r0=itemsBody.children[0];
+r0.querySelector('[data-role="name"]').value='پیراهن';
+r0.querySelector('[data-role="service"]').value='اتو و شست‌وشو';
+r0.querySelector('[data-role="qty"]').value=2;
+r0.querySelector('[data-role="price"]').value=50000;
+calcRow(r0);
+
+document.getElementById('invDate').value=todayISO();
+document.getElementById('invNo').value=String(Math.floor(1000+Math.random()*9000));
+
+/* ── COLLECT ── */
+function collectItems(){
+  return Array.from(itemsBody.children).map(tr=>({
+    name:tr.querySelector('[data-role="name"]').value.trim(),
+    service:tr.querySelector('[data-role="service"]').value,
+    qty:parseFloat(tr.querySelector('[data-role="qty"]').value)||0,
+    price:parseFloat(tr.querySelector('[data-role="price"]').value)||0,
+    amount:(parseFloat(tr.querySelector('[data-role="qty"]').value)||0)*(parseFloat(tr.querySelector('[data-role="price"]').value)||0)
+  })).filter(it=>it.name&&it.qty>0);
+}
+
+/* ── HISTORY ── */
+let history=JSON.parse(localStorage.getItem('sepidInvoiceHistory')||'[]');
+function saveHistory(){ localStorage.setItem('sepidInvoiceHistory',JSON.stringify(history)); }
+
+function renderHistory(){
+  const list=document.getElementById('historyList');
+  const empty=document.getElementById('historyEmpty');
+  const badge=document.getElementById('histBadgeNav');
+  badge.textContent=history.length;
+  if(!history.length){ list.innerHTML=''; list.appendChild(empty); return; }
+  list.innerHTML='';
+  for(let i=history.length-1;i>=0;i--){
+    const rec=history[i];
+    const card=document.createElement('div');
+    card.className='hist-card';
+    card.innerHTML=`
+      <div class="row1">
+        <span class="inv-no">فاکتور #${rec.invNo}</span>
+        <span class="pay-mini ${payClass(rec.payStatus)}">${rec.payStatus}</span>
+      </div>
+      <div class="cust">${rec.custName}</div>
+      <div class="meta-line"><span>${rec.invDateFa}</span><span class="total">${fa(rec.subtotal)} ریال</span></div>
+    `;
+    card.addEventListener('click',()=>{ renderOutput(rec); closeDrawer(); showToast('فاکتور #'+rec.invNo+' نمایش داده شد'); });
+    list.appendChild(card);
+  }
+}
+
+document.getElementById('clearHistoryBtn').addEventListener('click',()=>{
+  if(!history.length){ showToast('تاریخچه خالی است'); return; }
+  if(confirm('تمام تاریخچه فاکتورها پاک شود؟')){
+    history=[];saveHistory();renderHistory();
+    showToast('تاریخچه پاک شد');
+  }
+});
+
+/* ── RENDER OUTPUT ── */
+function renderOutput(rec){
+  document.getElementById('outCustName').textContent=rec.custName;
+  document.getElementById('outCustPhone').textContent=rec.custPhone;
+  document.getElementById('outInvNo').textContent=rec.invNo;
+  document.getElementById('outInvDate').textContent=rec.invDateFa;
+  document.getElementById('outDeliveryDate').textContent=rec.deliveryDateFa;
+
+  const payTag=document.getElementById('payTag');
+  payTag.textContent=rec.payStatus;
+  payTag.className='pay-tag '+(payClass(rec.payStatus));
+
+  const body=document.getElementById('outItemsBody');
+  body.innerHTML='';
+  rec.items.forEach((it,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${i+1}</td>
+      <td class="name-cell">${it.name}</td>
+      <td class="service-cell">${it.service}</td>
+      <td>${fa(it.qty)}</td>
+      <td>${fa(it.price)}</td>
+      <td>${fa(it.amount)} ریال</td>
+    `;
+    body.appendChild(tr);
+  });
+
+  document.getElementById('outSubtotal').textContent=fa(rec.subtotal)+' ریال';
+  document.getElementById('outGrandTotal').textContent=fa(rec.subtotal)+' ریال';
+
+  const nb=document.getElementById('outNoteBox');
+  if(rec.note){ document.getElementById('outNoteText').textContent=rec.note; nb.style.display='block'; }
+  else { nb.style.display='none'; }
+
+  document.getElementById('invoiceBox').classList.add('show');
+  document.getElementById('pdfToolbar').style.display='flex';
+}
+
+/* ── GENERATE ── */
+document.getElementById('generateBtn').addEventListener('click',()=>{
+  const items=collectItems();
+  if(!items.length){ showToast('حداقل یک ردیف معتبر وارد کنید'); return; }
+  const custName=document.getElementById('custName').value.trim()||'—';
+  const custPhone=document.getElementById('custPhone').value.trim()||'—';
+  const invNo=document.getElementById('invNo').value.trim()||'—';
+  const invDate=document.getElementById('invDate').value;
+  const deliveryDate=document.getElementById('deliveryDate').value;
+  const payStatus=document.getElementById('payStatus').value;
+  const note=document.getElementById('noteInput').value.trim();
+  let subtotal=0; items.forEach(it=>subtotal+=it.amount);
+
+  const rec={invNo,custName,custPhone,invDateFa:faDate(invDate),
+    deliveryDateFa:deliveryDate?faDate(deliveryDate):'هماهنگ می‌شود',
+    payStatus,items,subtotal,note};
+  history.push(rec); saveHistory(); renderHistory();
+  renderOutput(rec);
+  document.getElementById('invoiceBox').scrollIntoView({behavior:'smooth',block:'start'});
+  showToast('فاکتور ساخته شد ✓');
+});
+
+/* ── RESET ── */
+document.getElementById('resetBtn').addEventListener('click',()=>{
+  ['custName','custPhone','deliveryDate','noteInput'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('payStatus').value='پرداخت نشده';
+  document.getElementById('invDate').value=todayISO();
+  document.getElementById('invNo').value=String(Math.floor(1000+Math.random()*9000));
+  itemsBody.innerHTML=''; rowCount=0; addRow(); updateTotal();
+  document.getElementById('invoiceBox').classList.remove('show');
+  document.getElementById('pdfToolbar').style.display='none';
+  showToast('فرم پاک شد');
+});
+
+/* ── PDF ── */
+document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+document.getElementById('downloadPdfBtn').addEventListener('click',()=>{
+  const el=document.getElementById('invoicePrintArea');
+  const invNo=document.getElementById('outInvNo').textContent.trim();
+  showToast('در حال آماده‌سازی PDF...');
+
+  // Temporarily force white background for PDF
+  const prev=el.style.cssText;
+  el.style.background='#ffffff';
+  el.style.color='#14213d';
+  el.style.padding='0';
+
+  html2pdf().set({
+    margin:[8,8,8,8],
+    filename:'فاکتور-سپید-'+(invNo!=='—'?invNo:Date.now())+'.pdf',
+    image:{type:'jpeg',quality:0.98},
+    html2canvas:{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['avoid-all','css','legacy']}
+  }).from(el).save().then(()=>{
+    el.style.cssText=prev;
+    showToast('PDF دانلود شد ✓');
+  }).catch(()=>{
+    el.style.cssText=prev;
+    showToast('خطا — از دکمه چاپ استفاده کنید');
+  });
+});
+
+/* ── DRAWER ── */
+const drawer=document.getElementById('historyDrawer');
+const overlay=document.getElementById('drawerOverlay');
+function openDrawer(){ drawer.classList.add('open'); overlay.classList.add('open'); }
+function closeDrawer(){ drawer.classList.remove('open'); overlay.classList.remove('open'); }
+document.getElementById('historyBtnNav').addEventListener('click',e=>{e.preventDefault();openDrawer();});
+document.getElementById('drawerCloseBtn').addEventListener('click',closeDrawer);
+overlay.addEventListener('click',closeDrawer);
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDrawer(); });
+
+renderHistory();
+
+})();
+</script>
+</body>
+</html>
