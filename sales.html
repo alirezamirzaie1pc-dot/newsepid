@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>صندوق فروش — خشکشویی سپید</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%230a3d62'/><circle cx='50' cy='50' r='28' fill='none' stroke='%2300c8d4' stroke-width='6'/><circle cx='50' cy='50' r='8' fill='%2300c8d4'/></svg>">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --navy:      #070e1a;
+  --navy2:     #0d1f35;
+  --navy3:     #0f2c4a;
+  --teal:      #00c8d4;
+  --teal2:     #00a8b5;
+  --teal-glow: rgba(0,200,212,0.18);
+  --teal-soft: rgba(0,200,212,0.08);
+  --white:     #f0f8ff;
+  --white2:    rgba(240,248,255,0.75);
+  --white3:    rgba(240,248,255,0.45);
+  --glass:     rgba(13,31,53,0.72);
+  --border:    rgba(0,200,212,0.18);
+  --border2:   rgba(240,248,255,0.1);
+  --ok:        #00c896;
+  --gold:      #f0b429;
+  --danger:    #e05555;
+  --r:         14px;
+  --r2:        20px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Vazirmatn', Tahoma, sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: 0.6;
+}
+
+/* ── NAV ── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 28px; height: 64px;
+  background: rgba(7,14,26,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border2);
+}
+.nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.nav-logo-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--teal), var(--teal2));
+  border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px;
+  box-shadow: 0 0 14px var(--teal-glow);
+}
+.nav-logo-text { font-size: 16px; font-weight: 800; }
+.nav-logo-text span { color: var(--teal); }
+.nav-links { display: flex; align-items: center; gap: 4px; list-style: none; }
+.nav-links a {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 9px;
+  text-decoration: none; font-size: 13px; font-weight: 600;
+  color: var(--white3); transition: all .2s;
+}
+.nav-links a:hover { background: var(--teal-soft); color: var(--teal); }
+.nav-links a.active { background: var(--teal-soft); color: var(--teal); border: 1px solid var(--border); }
+
+/* ── DAILY TOTAL BADGE (fixed corner) ── */
+.daily-badge {
+  position: fixed;
+  bottom: 24px; left: 24px;
+  z-index: 200;
+  background: var(--glass);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 14px 20px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,200,212,0.06);
+  min-width: 180px;
+  transition: transform .2s;
+}
+.daily-badge:hover { transform: translateY(-2px); }
+.daily-badge .badge-label {
+  font-size: 10.5px; font-weight: 700; color: var(--white3);
+  letter-spacing: .05em; margin-bottom: 4px;
+  display: flex; align-items: center; gap: 5px;
+}
+.daily-badge .badge-label::before {
+  content: ''; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 6px var(--teal);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+.daily-badge .badge-amount {
+  font-size: 22px; font-weight: 900;
+  color: var(--teal);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.5px;
+}
+.daily-badge .badge-unit {
+  font-size: 11px; color: var(--white3); font-weight: 600;
+  margin-top: 2px;
+}
+.daily-badge .badge-count {
+  font-size: 11px; color: var(--white3); margin-top: 6px;
+  border-top: 1px solid var(--border2); padding-top: 6px;
+}
+
+/* ── LAYOUT ── */
+.app {
+  max-width: 960px; margin: 0 auto;
+  padding: 28px 20px 120px;
+  position: relative; z-index: 1;
+}
+.page-title {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 24px; padding-bottom: 20px;
+  border-bottom: 1px solid var(--border2);
+}
+.page-title-icon {
+  width: 46px; height: 46px; border-radius: 13px;
+  background: linear-gradient(135deg, var(--teal-soft), var(--teal-glow));
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; font-size: 22px;
+}
+.page-title h1 { font-size: 20px; font-weight: 900; }
+.page-title p { font-size: 12.5px; color: var(--white3); margin-top: 2px; }
+
+/* ── CARD ── */
+.card {
+  background: var(--glass); border: 1px solid var(--border2);
+  border-radius: var(--r2); backdrop-filter: blur(16px);
+  margin-bottom: 20px; overflow: hidden;
+}
+.card-header {
+  padding: 16px 22px; border-bottom: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.card-header-left { display: flex; align-items: center; gap: 10px; }
+.card-header-icon {
+  width: 30px; height: 30px; border-radius: 8px;
+  background: var(--teal-soft); border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+}
+.card-header h2 { font-size: 13.5px; font-weight: 800; }
+.card-header p { font-size: 11.5px; color: var(--white3); margin-top: 1px; }
+.card-body { padding: 22px; }
+
+/* ── FORM ── */
+.form-row { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 12px; align-items: end; margin-bottom: 14px; }
+@media(max-width:700px){ .form-row { grid-template-columns: 1fr 1fr; } }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 11.5px; font-weight: 700; color: var(--white3); }
+.field input, .field select {
+  border: 1.5px solid var(--border2);
+  background: rgba(13,31,53,0.6);
+  border-radius: 10px; padding: 10px 13px;
+  font-family: inherit; font-size: 13.5px; color: var(--white);
+  transition: border-color .15s, box-shadow .15s;
+  -webkit-appearance: none;
+}
+.field input::placeholder { color: rgba(240,248,255,0.2); }
+.field input:focus, .field select:focus {
+  outline: none; border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(0,200,212,0.15);
+}
+.field select option { background: #0d1f35; color: var(--white); }
+
+.btn {
+  font-family: inherit; font-size: 13.5px; font-weight: 800;
+  padding: 11px 20px; border-radius: 11px; cursor: pointer; border: none;
+  transition: all .15s; white-space: nowrap;
+}
+.btn:active { transform: translateY(1px); }
+.btn-primary {
+  background: linear-gradient(135deg, var(--teal), var(--teal2)); color: var(--navy);
+  box-shadow: 0 4px 20px rgba(0,200,212,0.3);
+}
+.btn-primary:hover { box-shadow: 0 6px 26px rgba(0,200,212,0.5); }
+.btn-ghost {
+  background: rgba(13,31,53,0.5); border: 1.5px solid var(--border2); color: var(--white3);
+  font-size: 12px; padding: 8px 14px;
+}
+.btn-ghost:hover { background: var(--teal-soft); border-color: var(--border); color: var(--teal); }
+.btn-danger-sm {
+  background: rgba(224,85,85,0.1); border: 1px solid rgba(224,85,85,0.2);
+  color: var(--danger); font-size: 12px; padding: 5px 10px; border-radius: 8px;
+  cursor: pointer; font-family: inherit;
+}
+.btn-danger-sm:hover { background: rgba(224,85,85,0.22); }
+
+/* ── TODAY'S TABLE ── */
+.table-wrap { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--border2); }
+table.sales-tbl {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px; min-width: 560px;
+}
+table.sales-tbl thead th {
+  background: rgba(0,200,212,0.07);
+  color: var(--teal); font-weight: 700; font-size: 11px;
+  padding: 11px 12px; text-align: center;
+  border-bottom: 1.5px solid var(--border2);
+}
+table.sales-tbl tbody td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border2);
+  text-align: center; vertical-align: middle;
+}
+table.sales-tbl tbody tr:last-child td { border-bottom: none; }
+table.sales-tbl tbody tr:hover td { background: rgba(0,200,212,0.03); }
+.td-name { text-align: right !important; font-weight: 700; }
+.td-amount { color: var(--teal); font-weight: 800; font-variant-numeric: tabular-nums; }
+.td-time { color: var(--white3); font-size: 11.5px; }
+.empty-row td { padding: 36px !important; color: var(--white3); font-size: 13px; }
+
+/* ── REPORT SECTION ── */
+.report-tabs {
+  display: flex; gap: 6px; margin-bottom: 18px;
+}
+.rtab {
+  padding: 8px 18px; border-radius: 10px;
+  font-family: inherit; font-size: 13px; font-weight: 700;
+  cursor: pointer; border: 1.5px solid var(--border2);
+  background: transparent; color: var(--white3); transition: all .15s;
+}
+.rtab.active {
+  background: var(--teal-soft); border-color: var(--border); color: var(--teal);
+}
+
+.report-filter {
+  display: flex; gap: 10px; align-items: center; margin-bottom: 18px; flex-wrap: wrap;
+}
+.report-filter input[type=month],
+.report-filter input[type=date] {
+  border: 1.5px solid var(--border2);
+  background: rgba(13,31,53,0.6); border-radius: 10px;
+  padding: 9px 13px; font-family: inherit; font-size: 13px; color: var(--white);
+}
+.report-filter input:focus { outline: none; border-color: var(--teal); }
+
+/* Summary cards row */
+.summary-row {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 14px; margin-bottom: 20px;
+}
+.sum-card {
+  background: rgba(13,31,53,0.55); border: 1px solid var(--border2);
+  border-radius: var(--r); padding: 16px 18px;
+}
+.sum-card .sc-label { font-size: 10.5px; font-weight: 700; color: var(--white3); margin-bottom: 5px; }
+.sum-card .sc-val { font-size: 20px; font-weight: 900; color: var(--teal); font-variant-numeric: tabular-nums; }
+.sum-card .sc-sub { font-size: 11px; color: var(--white3); margin-top: 3px; }
+
+/* Report table */
+table.report-tbl {
+  width: 100%; border-collapse: collapse;
+  font-size: 12.5px;
+}
+table.report-tbl thead th {
+  background: rgba(0,200,212,0.07);
+  color: var(--teal); font-weight: 700; font-size: 11px;
+  padding: 10px 12px; text-align: center;
+  border-bottom: 1.5px solid var(--border2);
+}
+table.report-tbl tbody td {
+  padding: 9px 12px; border-bottom: 1px solid var(--border2);
+  text-align: center;
+}
+table.report-tbl tbody tr:last-child td { border-bottom: none; }
+table.report-tbl tbody tr:hover td { background: rgba(0,200,212,0.03); }
+.rt-date { color: var(--white3); font-size: 11.5px; }
+.rt-name { text-align: right !important; font-weight: 600; }
+.rt-amt { color: var(--teal); font-weight: 800; font-variant-numeric: tabular-nums; }
+
+.monthly-day-row td { font-weight: 700; color: var(--white); }
+.monthly-day-total { color: var(--gold) !important; }
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 24px; right: 24px; z-index: 999;
+  background: rgba(0,200,212,0.15); border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 20px;
+  font-size: 13px; font-weight: 700;
+  backdrop-filter: blur(16px);
+  transform: translateY(60px); opacity: 0;
+  transition: all .3s;
+}
+.toast.show { transform: none; opacity: 1; }
+
+/* Print */
+@media print { nav, .daily-badge, .toast { display: none !important; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">🫧</div>
+    <div class="nav-logo-text">خشکشویی <span>سپید</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">🏠 داشبورد</a></li>
+    <li><a href="invoice.html">🧾 فاکتور</a></li>
+    <li><a href="sales.html" class="active">💰 صندوق فروش</a></li>
+  </ul>
+</nav>
+
+<!-- Fixed daily total badge -->
+<div class="daily-badge" id="dailyBadge">
+  <div class="badge-label">درآمد امروز</div>
+  <div class="badge-amount" id="badgeAmount">۰</div>
+  <div class="badge-unit">ریال</div>
+  <div class="badge-count" id="badgeCount">۰ تراکنش</div>
+</div>
+
+<div class="app">
+  <div class="page-title">
+    <div class="page-title-icon">💰</div>
+    <div>
+      <h1>صندوق فروش</h1>
+      <p id="todayLabel">ثبت و پیگیری درآمد روزانه</p>
+    </div>
+  </div>
+
+  <!-- Entry form -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="card-header-icon">➕</div>
+        <div>
+          <h2>ثبت تراکنش جدید</h2>
+          <p>نام مشتری، نوع خدمت، تعداد و مبلغ را وارد کنید</p>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="field">
+          <label>نام مشتری</label>
+          <input type="text" id="custName" placeholder="مثلاً علی میرزایی" autocomplete="off">
+        </div>
+        <div class="field">
+          <label>نوع خدمت</label>
+          <select id="service">
+            <option>اتو</option>
+            <option>شستشو</option>
+            <option>اتو و شستشو</option>
+            <option>خشکشویی</option>
+            <option>پرده</option>
+            <option>فرش</option>
+            <option>سایر</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>تعداد</label>
+          <input type="number" id="qty" placeholder="۱" min="1" value="1">
+        </div>
+        <div class="field">
+          <label>مبلغ (ریال)</label>
+          <input type="number" id="amount" placeholder="۸۰۰۰۰" min="0" step="1000">
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <button class="btn btn-primary" id="addBtn">ثبت</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Today's records -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="card-header-icon">📋</div>
+        <div>
+          <h2>تراکنش‌های امروز</h2>
+          <p id="todayDateLabel"></p>
+        </div>
+      </div>
+      <button class="btn-ghost btn" onclick="clearToday()" style="font-size:11.5px;padding:7px 14px;">پاک کردن امروز</button>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <div class="table-wrap">
+        <table class="sales-tbl">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>نام مشتری</th>
+              <th>خدمت</th>
+              <th>تعداد</th>
+              <th>مبلغ (ریال)</th>
+              <th>ساعت</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="todayBody">
+            <tr class="empty-row"><td colspan="7">هنوز تراکنشی ثبت نشده</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reports -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-header-left">
+        <div class="card-header-icon">📊</div>
+        <div>
+          <h2>گزارش فروش</h2>
+          <p>گزارش روزانه یا ماهانه</p>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="report-tabs">
+        <button class="rtab active" id="tabDaily" onclick="switchTab('daily')">📅 گزارش روزانه</button>
+        <button class="rtab" id="tabMonthly" onclick="switchTab('monthly')">📆 گزارش ماهانه</button>
+      </div>
+
+      <!-- Daily report -->
+      <div id="dailyReport">
+        <div class="report-filter">
+          <input type="date" id="reportDate">
+          <button class="btn btn-primary" style="padding:9px 18px;font-size:13px;" onclick="renderDailyReport()">نمایش گزارش</button>
+        </div>
+        <div class="summary-row" id="dailySummary" style="display:none"></div>
+        <div class="table-wrap" id="dailyTableWrap" style="display:none">
+          <table class="report-tbl">
+            <thead>
+              <tr><th>#</th><th>نام مشتری</th><th>خدمت</th><th>تعداد</th><th>مبلغ (ریال)</th><th>ساعت</th></tr>
+            </thead>
+            <tbody id="dailyBody"></tbody>
+          </table>
+        </div>
+        <div id="dailyEmpty" style="text-align:center;padding:30px;color:var(--white3);font-size:13px;display:none">تراکنشی در این تاریخ ثبت نشده</div>
+      </div>
+
+      <!-- Monthly report -->
+      <div id="monthlyReport" style="display:none">
+        <div class="report-filter">
+          <input type="month" id="reportMonth">
+          <button class="btn btn-primary" style="padding:9px 18px;font-size:13px;" onclick="renderMonthlyReport()">نمایش گزارش</button>
+        </div>
+        <div class="summary-row" id="monthlySummary" style="display:none"></div>
+        <div class="table-wrap" id="monthlyTableWrap" style="display:none">
+          <table class="report-tbl">
+            <thead>
+              <tr><th>تاریخ</th><th>تعداد تراکنش</th><th>جمع مبلغ (ریال)</th></tr>
+            </thead>
+            <tbody id="monthlyBody"></tbody>
+          </table>
+        </div>
+        <div id="monthlyEmpty" style="text-align:center;padding:30px;color:var(--white3);font-size:13px;display:none">تراکنشی در این ماه ثبت نشده</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+
+/* ── HELPERS ── */
+function fa(n){ return Number(n).toLocaleString('fa-IR'); }
+
+function todayISO(){
+  const d=new Date();
+  return d.toISOString().slice(0,10);
+}
+
+function toLocalTimeStr(isoStr){
+  const d=new Date(isoStr);
+  return d.toLocaleTimeString('fa-IR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function faDate(iso){
+  if(!iso) return '';
+  const d=new Date(iso+'T00:00:00');
+  return d.toLocaleDateString('fa-IR',{year:'numeric',month:'long',day:'numeric'});
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+/* ── STORAGE ── */
+// Key: "sales" -> array of {id, date(ISO), time(ISO), cust, service, qty, amount}
+function load(){ return JSON.parse(localStorage.getItem('sepidSales')||'[]'); }
+function save(data){ localStorage.setItem('sepidSales', JSON.stringify(data)); }
+
+/* ── DATE DISPLAY ── */
+document.getElementById('todayLabel').textContent = faDate(todayISO()) + ' — ثبت و پیگیری درآمد';
+document.getElementById('todayDateLabel').textContent = faDate(todayISO());
+document.getElementById('reportDate').value = todayISO();
+const now=new Date();
+document.getElementById('reportMonth').value = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+
+/* ── ADD TRANSACTION ── */
+document.getElementById('addBtn').addEventListener('click', addTx);
+document.getElementById('amount').addEventListener('keydown', e=>{ if(e.key==='Enter') addTx(); });
+
+function addTx(){
+  const cust=document.getElementById('custName').value.trim();
+  const service=document.getElementById('service').value;
+  const qty=parseInt(document.getElementById('qty').value)||1;
+  const amount=parseFloat(document.getElementById('amount').value)||0;
+  if(!cust){ showToast('نام مشتری را وارد کنید'); return; }
+  if(!amount){ showToast('مبلغ را وارد کنید'); return; }
+
+  const now=new Date();
+  const rec={
+    id: Date.now(),
+    date: todayISO(),
+    time: now.toISOString(),
+    cust, service, qty,
+    amount
+  };
+
+  const data=load();
+  data.push(rec);
+  save(data);
+
+  // reset form fields except service
+  document.getElementById('custName').value='';
+  document.getElementById('qty').value='1';
+  document.getElementById('amount').value='';
+  document.getElementById('custName').focus();
+
+  renderToday();
+  showToast('✓ تراکنش ثبت شد');
+}
+
+/* ── RENDER TODAY ── */
+function renderToday(){
+  const data=load();
+  const today=todayISO();
+  const rows=data.filter(r=>r.date===today);
+  const tbody=document.getElementById('todayBody');
+  tbody.innerHTML='';
+
+  if(!rows.length){
+    const tr=document.createElement('tr');
+    tr.className='empty-row';
+    tr.innerHTML='<td colspan="7">هنوز تراکنشی ثبت نشده</td>';
+    tbody.appendChild(tr);
+  } else {
+    rows.forEach((r,i)=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`
+        <td>${fa(i+1)}</td>
+        <td class="td-name">${r.cust}</td>
+        <td>${r.service}</td>
+        <td>${fa(r.qty)}</td>
+        <td class="td-amount">${fa(r.amount)}</td>
+        <td class="td-time">${toLocalTimeStr(r.time)}</td>
+        <td><button class="btn-danger-sm" onclick="deleteTx(${r.id})">حذف</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // update badge
+  const total=rows.reduce((s,r)=>s+r.amount,0);
+  document.getElementById('badgeAmount').textContent=fa(total);
+  document.getElementById('badgeCount').textContent=fa(rows.length)+' تراکنش';
+}
+
+window.deleteTx=function(id){
+  if(!confirm('این تراکنش حذف شود؟')) return;
+  const data=load().filter(r=>r.id!==id);
+  save(data);
+  renderToday();
+  showToast('تراکنش حذف شد');
+};
+
+window.clearToday=function(){
+  const today=todayISO();
+  const cnt=load().filter(r=>r.date===today).length;
+  if(!cnt){ showToast('امروز تراکنشی ثبت نشده'); return; }
+  if(!confirm('تمام تراکنش‌های امروز حذف شوند؟')) return;
+  save(load().filter(r=>r.date!==today));
+  renderToday();
+  showToast('تراکنش‌های امروز پاک شدند');
+};
+
+/* ── TABS ── */
+window.switchTab=function(tab){
+  document.getElementById('tabDaily').classList.toggle('active', tab==='daily');
+  document.getElementById('tabMonthly').classList.toggle('active', tab==='monthly');
+  document.getElementById('dailyReport').style.display = tab==='daily'?'block':'none';
+  document.getElementById('monthlyReport').style.display = tab==='monthly'?'block':'none';
+};
+
+/* ── DAILY REPORT ── */
+window.renderDailyReport=function(){
+  const date=document.getElementById('reportDate').value;
+  if(!date) return;
+  const rows=load().filter(r=>r.date===date);
+
+  const sum=document.getElementById('dailySummary');
+  const tw=document.getElementById('dailyTableWrap');
+  const emp=document.getElementById('dailyEmpty');
+  const body=document.getElementById('dailyBody');
+
+  if(!rows.length){
+    sum.style.display='none'; tw.style.display='none'; emp.style.display='block'; return;
+  }
+  emp.style.display='none';
+
+  const total=rows.reduce((s,r)=>s+r.amount,0);
+  const avgVal=total/rows.length;
+  sum.style.display='grid';
+  sum.innerHTML=`
+    <div class="sum-card"><div class="sc-label">جمع درآمد</div><div class="sc-val">${fa(total)}</div><div class="sc-sub">ریال</div></div>
+    <div class="sum-card"><div class="sc-label">تعداد تراکنش</div><div class="sc-val">${fa(rows.length)}</div><div class="sc-sub">تراکنش</div></div>
+    <div class="sum-card"><div class="sc-label">میانگین هر تراکنش</div><div class="sc-val">${fa(Math.round(avgVal))}</div><div class="sc-sub">ریال</div></div>
+  `;
+
+  body.innerHTML='';
+  rows.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td>${fa(i+1)}</td>
+      <td class="rt-name">${r.cust}</td>
+      <td>${r.service}</td>
+      <td>${fa(r.qty)}</td>
+      <td class="rt-amt">${fa(r.amount)}</td>
+      <td class="rt-date">${toLocalTimeStr(r.time)}</td>
+    `;
+    body.appendChild(tr);
+  });
+  tw.style.display='block';
+};
+
+/* ── MONTHLY REPORT ── */
+window.renderMonthlyReport=function(){
+  const month=document.getElementById('reportMonth').value; // "2025-03"
+  if(!month) return;
+
+  const all=load().filter(r=>r.date.startsWith(month));
+  const sum=document.getElementById('monthlySummary');
+  const tw=document.getElementById('monthlyTableWrap');
+  const emp=document.getElementById('monthlyEmpty');
+  const body=document.getElementById('monthlyBody');
+
+  if(!all.length){
+    sum.style.display='none'; tw.style.display='none'; emp.style.display='block'; return;
+  }
+  emp.style.display='none';
+
+  // group by day
+  const byDay={};
+  all.forEach(r=>{
+    byDay[r.date]=byDay[r.date]||{count:0,total:0};
+    byDay[r.date].count++;
+    byDay[r.date].total+=r.amount;
+  });
+
+  const total=all.reduce((s,r)=>s+r.amount,0);
+  const days=Object.keys(byDay).length;
+  sum.style.display='grid';
+  sum.innerHTML=`
+    <div class="sum-card"><div class="sc-label">جمع درآمد ماه</div><div class="sc-val">${fa(total)}</div><div class="sc-sub">ریال</div></div>
+    <div class="sum-card"><div class="sc-label">تعداد روزهای کاری</div><div class="sc-val">${fa(days)}</div><div class="sc-sub">روز</div></div>
+    <div class="sum-card"><div class="sc-label">تعداد کل تراکنش</div><div class="sc-val">${fa(all.length)}</div><div class="sc-sub">تراکنش</div></div>
+    <div class="sum-card"><div class="sc-label">میانگین روزانه</div><div class="sc-val">${fa(Math.round(total/days))}</div><div class="sc-sub">ریال/روز</div></div>
+  `;
+
+  body.innerHTML='';
+  Object.keys(byDay).sort().forEach(date=>{
+    const d=byDay[date];
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td class="rt-date">${faDate(date)}</td>
+      <td>${fa(d.count)}</td>
+      <td class="rt-amt">${fa(d.total)}</td>
+    `;
+    body.appendChild(tr);
+  });
+  // totals row
+  const tfoot=document.createElement('tr');
+  tfoot.style.borderTop='2px solid var(--border)';
+  tfoot.innerHTML=`
+    <td style="font-weight:800;color:var(--white)">جمع کل</td>
+    <td style="font-weight:800;color:var(--white)">${fa(all.length)}</td>
+    <td style="font-weight:900;color:var(--gold)">${fa(total)}</td>
+  `;
+  body.appendChild(tfoot);
+  tw.style.display='block';
+};
+
+/* ── INIT ── */
+renderToday();
+
+})();
+</script>
+</body>
+</html>
